@@ -13,20 +13,39 @@ python_lib=get_python_lib()
 
 package_data = ('%s/pg_chameleon' % python_lib, ['LICENSE.txt'])
 
-	
+data_files = []
 
+locale_src_path = 'pg_chameleon/locale'
 sql_up_path = 'sql/upgrade'
 conf_dir = "/%s/pg_chameleon/configuration" % python_lib
 conn_dir = "/%s/pg_chameleon/connection" % python_lib
 sql_dir = "/%s/pg_chameleon/sql" % python_lib
 sql_up_dir = "/%s/pg_chameleon/%s" % (python_lib, sql_up_path)
+locale_dst_path = "/%s/" % (python_lib)
+pot_source_path = 'pg_chameleon/msg/'
+pot_dest_path = '/%s/%s/' % (python_lib, pot_source_path)
+
+data_files.append((pot_dest_path,['%s/%s' % (pot_source_path, 'log_msg.pot')]))
+
+for path in listdir(locale_src_path):
+	loc_path = '%s/%s/LC_MESSAGES' %(locale_src_path,path)
+	locale_destination_path = '%s/%s' % (locale_dst_path, loc_path)
+	locale_files = []
+	for loc_file in listdir(loc_path):
+		locale_files.append('%s/%s' %(loc_path,loc_file))
+	data_files.append((locale_destination_path,locale_files))
+	
 
 
-data_files = []
+
+
+
 conf_files = (conf_dir, ['configuration/config-example.yml'])
 
 sql_src = ['sql/create_schema.sql', 'sql/drop_schema.sql']
 sql_upgrade = ["%s/%s" % (sql_up_path, file) for file in listdir(sql_up_path) if isfile(join(sql_up_path, file))]
+
+
 
 sql_files = (sql_dir,sql_src)
 sql_up_files = (sql_up_dir,sql_upgrade)
@@ -74,7 +93,8 @@ setup(
 		"pg_chameleon.lib.global_lib",
 		"pg_chameleon.lib.mysql_lib",
 		"pg_chameleon.lib.pg_lib",
-		"pg_chameleon.lib.sql_util"
+		"pg_chameleon.lib.sql_util", 
+		"pg_chameleon.msg.log_msg"
 	],
 	scripts=[
 		"scripts/chameleon.py", 

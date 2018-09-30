@@ -2,4 +2,7 @@ include configuration/config-example.yml
 include sql/create_schema.sql
 include sql/drop_schema.sql
 include sql/upgrade/*.sql
+include pg_chameleon/locale/*/*/*.po
+include pg_chameleon/locale/*/*/*.mo
+include pg_chameleon/msg/log_msg.pot
 include LICENSE.txt
