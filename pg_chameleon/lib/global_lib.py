@@ -148,13 +148,13 @@ class replica_engine(object):
 		#safety checks
 		if self.args.command == 'upgrade_replica_schema':
 			self.pg_engine.sources = self.config["sources"]
-			print("WARNING, entering upgrade mode. Disabling the catalogue version's check. Expected version %s, installed version %s" % (self.catalog_version, catalog_version))
+			print(self.trn.WARN_UPGRADE_MODE % (self.catalog_version, catalog_version))
 		elif self.args.command == 'enable_replica' and self.catalog_version != catalog_version:
-			print("WARNING, catalogue mismatch. Expected version %s, installed version %s" % (self.catalog_version, catalog_version))
+			print(self.trn.WARN_CATALOGUE_MISMATCH % (self.catalog_version, catalog_version))
 		else:
 			if  catalog_version:
 				if self.catalog_version != catalog_version:
-					print("FATAL, replica catalogue version mismatch. Expected %s, got %s" % (self.catalog_version, catalog_version))
+					print(self.trn.FATAL_CATALOGUE_MISMATCH % (self.catalog_version, catalog_version))
 					sys.exit()
 		
 		if self.args.source != '*' and self.args.command != 'add_source':
@@ -162,7 +162,7 @@ class replica_engine(object):
 			source_count = self.pg_engine.check_source()
 			self.pg_engine.disconnect_db()
 			if source_count == 0:
-				print("FATAL, The source %s is not registered. Please add it add_source" % (self.args.source))
+				print(self.trn.FATAL_SOURCE_NOT_REGISTERED % (self.args.source))
 				sys.exit()
 		
 		

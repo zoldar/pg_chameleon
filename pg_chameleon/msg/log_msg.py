@@ -13,8 +13,14 @@ class msg_translate(object):
 		
 	def init_translate(self, locale):
 		locale_dir = '%s/pg_chameleon/locale' % (python_lib, )
-		print(locale_dir)
 		trn = gettext.translation('log_msg', localedir=locale_dir, languages=[locale])
 		trn.install()
-			
+		
+		# global_lib.py
+		self.WARN_UPGRADE_MODE =  _("WARNING, entering upgrade mode. Disabling the catalogue version's check. Expected version %s, installed version %s")
+		self.WARN_CATALOGUE_MISMATCH = _("WARNING, catalogue mismatch. Expected version %s, installed version %s")
+		self.FATAL_CATALOGUE_MISMATCH = _("FATAL, replica catalogue version mismatch. Expected %s, got %s")
+		self.FATAL_SOURCE_NOT_REGISTERED = _("FATAL, the source %s is not registered. Please add the source with the command add_source")
+		
+		# mysql_lib.py
 		self.INIT_START_SOURCE = _("starting init replica for source %s")
