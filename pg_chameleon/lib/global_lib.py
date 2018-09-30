@@ -14,6 +14,7 @@ from logging.handlers  import TimedRotatingFileHandler
 from daemonize import Daemonize
 import multiprocessing as mp
 import traceback 
+from pg_chameleon.msg.log_msg import msg_translate
 
 class rollbar_notifier(object):
 	"""
@@ -99,6 +100,7 @@ class replica_engine(object):
 		
 		self.load_config()
 		
+		self.trn = msg_translate(self.config["locale"])
 		log_list = self.__init_logger("global")
 		self.logger = log_list[0]
 		self.logger_fds = log_list[1]
@@ -115,6 +117,7 @@ class replica_engine(object):
 		self.pg_engine.type_override = self.config["type_override"]
 		self.pg_engine.sources = self.config["sources"]
 		self.pg_engine.notifier = self.notifier
+		self.pg_engine.trn = self.trn
 		
 		#mysql_source instance initialisation
 		self.mysql_source = mysql_source()
@@ -126,6 +129,7 @@ class replica_engine(object):
 		self.mysql_source.sources = self.config["sources"]
 		self.mysql_source.type_override = self.config["type_override"]
 		self.mysql_source.notifier = self.notifier
+		self.mysql_source.trn = self.trn
 		
 		#pgsql_source instance initialisation
 		self.pgsql_source = pgsql_source()
@@ -137,6 +141,7 @@ class replica_engine(object):
 		self.pgsql_source.sources = self.config["sources"]
 		self.pgsql_source.type_override = self.config["type_override"]
 		self.pgsql_source.notifier = self.notifier
+		self.pgsql_source.trn = self.trn
 		
 		catalog_version = self.pg_engine.get_catalog_version()
 

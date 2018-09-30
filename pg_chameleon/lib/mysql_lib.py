@@ -1363,7 +1363,8 @@ class mysql_source(object):
 		"""
 			The method performs a full init replica for the given sources
 		"""
-		self.logger.debug("starting init replica for source %s" % self.source)
+		self.logger.debug(self.trn.INIT_START_SOURCE % self.source)
+		sys.exit()
 		self.__init_sync()
 		self.__check_mysql_config()
 		master_start = self.get_master_coordinates()
