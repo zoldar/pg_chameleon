@@ -1,6 +1,4 @@
 import gettext
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from distutils.sysconfig import get_python_lib
 python_lib=get_python_lib()
 
@@ -21,6 +19,6 @@ class msg_translate(object):
 		self.WARN_CATALOGUE_MISMATCH = _("WARNING, catalogue mismatch. Expected version %s, installed version %s")
 		self.FATAL_CATALOGUE_MISMATCH = _("FATAL, replica catalogue version mismatch. Expected %s, got %s")
 		self.FATAL_SOURCE_NOT_REGISTERED = _("FATAL, the source %s is not registered. Please add the source with the command add_source")
-		
+		self.INFO_STOP_REPLICA = _("Caught stop replica signal terminating daemons and ending the replica process.")
 		# mysql_lib.py
 		self.INIT_START_SOURCE = _("starting init replica for source %s")

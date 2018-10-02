@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-09-30 21:57+0200\n"
+"POT-Creation-Date: 2018-10-02 19:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,27 +19,31 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: log_msg.py\n"
 
-#: log_msg.py:20
+#: log_msg.py:18
 #, python-format
 msgid "WARNING, entering upgrade mode. Disabling the catalogue version's check. Expected version %s, installed version %s"
 msgstr ""
 
-#: log_msg.py:21
+#: log_msg.py:19
 #, python-format
 msgid "WARNING, catalogue mismatch. Expected version %s, installed version %s"
 msgstr ""
 
-#: log_msg.py:22
+#: log_msg.py:20
 #, python-format
 msgid "FATAL, replica catalogue version mismatch. Expected %s, got %s"
 msgstr ""
 
-#: log_msg.py:23
+#: log_msg.py:21
 #, python-format
 msgid "FATAL, the source %s is not registered. Please add the source with the command add_source"
 msgstr ""
 
-#: log_msg.py:26
+#: log_msg.py:22
+msgid "Caught stop replica signal terminating daemons and ending the replica process."
+msgstr ""
+
+#: log_msg.py:24
 #, python-format
 msgid "starting init replica for source %s"
 msgstr ""

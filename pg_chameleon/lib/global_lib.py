@@ -58,7 +58,7 @@ class rollbar_notifier(object):
 			except:
 				self.logger.error("Wrong rollbar level specified.")
 		
-class replica_engine(object):
+class replica_engine(msg_translate):
 	"""
 		This class is wraps the the mysql and postgresql engines in order to perform the various activities required for the replica. 
 		The constructor inits the global configuration class  and setup the mysql and postgresql engines as class objects. 
@@ -100,7 +100,7 @@ class replica_engine(object):
 		
 		self.load_config()
 		
-		self.trn = msg_translate(self.config["locale"])
+		self.init_translate(self.config["locale"])
 		log_list = self.__init_logger("global")
 		self.logger = log_list[0]
 		self.logger_fds = log_list[1]
@@ -117,10 +117,10 @@ class replica_engine(object):
 		self.pg_engine.type_override = self.config["type_override"]
 		self.pg_engine.sources = self.config["sources"]
 		self.pg_engine.notifier = self.notifier
-		self.pg_engine.trn = self.trn
+		
 		
 		#mysql_source instance initialisation
-		self.mysql_source = mysql_source()
+		self.mysql_source = mysql_source(self.config["locale"])
 		self.mysql_source.source = self.args.source
 		self.mysql_source.tables = self.args.tables
 		self.mysql_source.schema = self.args.schema.strip()
@@ -129,7 +129,7 @@ class replica_engine(object):
 		self.mysql_source.sources = self.config["sources"]
 		self.mysql_source.type_override = self.config["type_override"]
 		self.mysql_source.notifier = self.notifier
-		self.mysql_source.trn = self.trn
+		
 		
 		#pgsql_source instance initialisation
 		self.pgsql_source = pgsql_source()
@@ -141,20 +141,20 @@ class replica_engine(object):
 		self.pgsql_source.sources = self.config["sources"]
 		self.pgsql_source.type_override = self.config["type_override"]
 		self.pgsql_source.notifier = self.notifier
-		self.pgsql_source.trn = self.trn
+		
 		
 		catalog_version = self.pg_engine.get_catalog_version()
 
 		#safety checks
 		if self.args.command == 'upgrade_replica_schema':
 			self.pg_engine.sources = self.config["sources"]
-			print(self.trn.WARN_UPGRADE_MODE % (self.catalog_version, catalog_version))
+			print(self.WARN_UPGRADE_MODE % (self.catalog_version, catalog_version))
 		elif self.args.command == 'enable_replica' and self.catalog_version != catalog_version:
-			print(self.trn.WARN_CATALOGUE_MISMATCH % (self.catalog_version, catalog_version))
+			print(self.WARN_CATALOGUE_MISMATCH % (self.catalog_version, catalog_version))
 		else:
 			if  catalog_version:
 				if self.catalog_version != catalog_version:
-					print(self.trn.FATAL_CATALOGUE_MISMATCH % (self.catalog_version, catalog_version))
+					print(self.FATAL_CATALOGUE_MISMATCH % (self.catalog_version, catalog_version))
 					sys.exit()
 		
 		if self.args.source != '*' and self.args.command != 'add_source':
@@ -162,7 +162,7 @@ class replica_engine(object):
 			source_count = self.pg_engine.check_source()
 			self.pg_engine.disconnect_db()
 			if source_count == 0:
-				print(self.trn.FATAL_SOURCE_NOT_REGISTERED % (self.args.source))
+				print(self.FATAL_SOURCE_NOT_REGISTERED % (self.args.source))
 				sys.exit()
 		
 		
@@ -172,7 +172,7 @@ class replica_engine(object):
 		"""
 			Stops gracefully the replica.
 		"""
-		self.logger.info("Caught stop replica signal terminating daemons and ending the replica process.")
+		self.logger.info(self.INFO_STOP_REPLICA)
 		self.read_daemon.terminate()
 		self.replay_daemon.terminate()
 		self.pg_engine.connect_db()

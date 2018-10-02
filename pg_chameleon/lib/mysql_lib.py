@@ -10,9 +10,10 @@ from pymysqlreplication.row_event import DeleteRowsEvent,UpdateRowsEvent,WriteRo
 from pymysqlreplication.event import RotateEvent
 from pg_chameleon import sql_token
 from os import remove
+from pg_chameleon.msg.log_msg import msg_translate
 
-class mysql_source(object):
-	def __init__(self):
+class mysql_source(msg_translate):
+	def __init__(self, locale):
 		"""
 			Class constructor, the method sets the class variables and configure the
 			operating parameters from the args provided t the class.
@@ -26,6 +27,7 @@ class mysql_source(object):
 		self.schema_only = {}
 		self.gtid_mode = False
 		self.gtid_enable = False
+		self.init_translate(locale)
 		
 	def __del__(self):
 		"""
@@ -1363,7 +1365,7 @@ class mysql_source(object):
 		"""
 			The method performs a full init replica for the given sources
 		"""
-		self.logger.debug(self.trn.INIT_START_SOURCE % self.source)
+		self.logger.debug(self.INIT_START_SOURCE % self.source)
 		self.__init_sync()
 		self.__check_mysql_config()
 		master_start = self.get_master_coordinates()
