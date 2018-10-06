@@ -2,14 +2,12 @@ import gettext
 from distutils.sysconfig import get_python_lib
 python_lib=get_python_lib()
 
+
 class msg_translate(object):
-	def __init__(self, locale="en_GB"):
+	def __init__(self, locale):
 		"""
 		Class constructor
 		"""
-		self.init_translate(locale)
-		
-	def init_translate(self, locale):
 		locale_dir = '%s/pg_chameleon/locale' % (python_lib, )
 		trn = gettext.translation('log_msg', localedir=locale_dir, languages=[locale])
 		trn.install()
@@ -21,4 +19,4 @@ class msg_translate(object):
 		self.FATAL_SOURCE_NOT_REGISTERED = _("FATAL, the source %s is not registered. Please add the source with the command add_source")
 		self.INFO_STOP_REPLICA = _("Caught stop replica signal terminating daemons and ending the replica process.")
 		# mysql_lib.py
-		self.INIT_START_SOURCE = _("starting init replica for source %s")
+		self.INFO_INIT_SOURCE = _("starting init replica for source %s")

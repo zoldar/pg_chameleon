@@ -1,4 +1,3 @@
-import time
 import sys
 import io
 import pymysql
@@ -8,9 +7,10 @@ from pymysqlreplication import BinLogStreamReader
 from pymysqlreplication.event import QueryEvent, GtidEvent, HeartbeatLogEvent
 from pymysqlreplication.row_event import DeleteRowsEvent,UpdateRowsEvent,WriteRowsEvent
 from pymysqlreplication.event import RotateEvent
-from pg_chameleon import sql_token
-from os import remove
+from pg_chameleon.lib.sql_util import sql_token
 from pg_chameleon.msg.log_msg import msg_translate
+from os import remove
+
 
 class mysql_source(msg_translate):
 	def __init__(self, locale):
@@ -27,7 +27,7 @@ class mysql_source(msg_translate):
 		self.schema_only = {}
 		self.gtid_mode = False
 		self.gtid_enable = False
-		self.init_translate(locale)
+		msg_translate.__init__(self, locale)
 		
 	def __del__(self):
 		"""
@@ -1365,7 +1365,7 @@ class mysql_source(msg_translate):
 		"""
 			The method performs a full init replica for the given sources
 		"""
-		self.logger.debug(self.INIT_START_SOURCE % self.source)
+		self.logger.debug(self.INFO_INIT_SOURCE % self.source)
 		self.__init_sync()
 		self.__check_mysql_config()
 		master_start = self.get_master_coordinates()

@@ -2,7 +2,7 @@
 from pkg_resources import get_distribution
 __version__ = get_distribution('pg_chameleon')
 import argparse
-from pg_chameleon import replica_engine
+from pg_chameleon.replica import replica_engine
 
 commands = [
 	'show_config',
