@@ -1365,7 +1365,7 @@ class mysql_source(msg_translate):
 		"""
 			The method performs a full init replica for the given sources
 		"""
-		self.logger.debug(self.INFO_INIT_SOURCE % self.source)
+		self.logger.debug(self.INFO_INIT_SOURCE.format(source=self.source))
 		self.__init_sync()
 		self.__check_mysql_config()
 		master_start = self.get_master_coordinates()

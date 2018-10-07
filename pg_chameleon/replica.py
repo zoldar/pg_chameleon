@@ -54,6 +54,7 @@ class replica_engine(msg_translate):
 		self.args = args
 		self.source = self.args.source
 		if self.args.command == 'set_configuration_files':
+			msg_translate.__init__(self, "en_GB")
 			self.set_configuration_files()
 			sys.exit()
 		
@@ -109,13 +110,13 @@ class replica_engine(msg_translate):
 		#safety checks
 		if self.args.command == 'upgrade_replica_schema':
 			self.pg_engine.sources = self.config["sources"]
-			print(self.WARN_UPGRADE_MODE % (self.catalog_version, catalog_version))
+			print(self.WARN_UPGRADE_MODE.format(expected=self.catalog_version, installed=catalog_version))
 		elif self.args.command == 'enable_replica' and self.catalog_version != catalog_version:
-			print(self.WARN_CATALOGUE_MISMATCH % (self.catalog_version, catalog_version))
+			print(self.WARN_CATALOGUE_MISMATCH.format(expected=self.catalog_version, installed=catalog_version))
 		else:
 			if  catalog_version:
 				if self.catalog_version != catalog_version:
-					print(self.FATAL_CATALOGUE_MISMATCH % (self.catalog_version, catalog_version))
+					print(self.FATAL_CATALOGUE_MISMATCH.format(expected=self.catalog_version, installed=catalog_version))
 					sys.exit()
 		
 		if self.args.source != '*' and self.args.command != 'add_source':
@@ -123,7 +124,7 @@ class replica_engine(msg_translate):
 			source_count = self.pg_engine.check_source()
 			self.pg_engine.disconnect_db()
 			if source_count == 0:
-				print(self.FATAL_SOURCE_NOT_REGISTERED % (self.args.source))
+				print(self.FATAL_SOURCE_NOT_REGISTERED.format(source=self.args.source))
 				sys.exit()
 		
 		
@@ -153,16 +154,16 @@ class replica_engine(msg_translate):
 
 		for confdir in self.conf_dirs:
 			if not os.path.isdir(confdir):
-				print ("creating directory %s" % confdir)
+				print (self.INFO_CREATE_DIR .format(directory=confdir))
 				os.mkdir(confdir)
 		
 				
 		if os.path.isfile(self.local_conf_example):
 			if os.path.getctime(self.global_conf_example)>os.path.getctime(self.local_conf_example):
-				print ("updating configuration example with %s" % self.local_conf_example)
+				print (self.INFO_UPDATE_CONF_FILES.format(file=self.local_conf_example))
 				copy(self.global_conf_example, self.local_conf_example)
 		else:
-			print ("copying configuration  example in %s" % self.local_conf_example)
+			print (self.INFO_COPY_EXAMPLE_CONF.format(file=self.local_conf_example))
 			copy(self.global_conf_example, self.local_conf_example)
 	
 	def load_config(self):
@@ -173,7 +174,8 @@ class replica_engine(msg_translate):
 		self.config_file = '%s/%s.yml'%(local_confdir, self.args.config)
 		
 		if not os.path.isfile(self.config_file):
-			print("**FATAL - configuration file missing. Please ensure the file %s is present." % (self.config_file))
+			msg_translate.__init__(self, "en_GB")
+			print(self.FATAL_MISSING_CONF_FILE.format(file=self.config_file))
 			sys.exit()
 		
 		config_file = open(self.config_file, 'r')
@@ -227,14 +229,14 @@ class replica_engine(msg_translate):
 		"""
 			The method creates the replica schema in the destination database.
 		"""
-		self.logger.info("Trying to create replica schema")
+		self.logger.info(self.INFO_CREATE_REPLICA_SCHEMA)
 		self.pg_engine.create_replica_schema()
 		
 	def drop_replica_schema(self):
 		"""
 			The method removes the replica schema from the destination database.
 		"""
-		self.logger.info("Dropping the replica schema")
+		self.logger.info(self.INFO_DROP_REPLICA_SCHEMA)
 		self.pg_engine.drop_replica_schema()
 	
 	def add_source(self):
@@ -242,9 +244,9 @@ class replica_engine(msg_translate):
 			The method adds a new replication source. A pre existence check is performed
 		"""
 		if self.args.source == "*":
-			print("You must specify a source name with the argument --source")
+			print(self.FATAL_MISSING_SOURCE)
 		else:
-			self.logger.info("Trying to add a new source")
+			self.logger.info(self.INFO_ADD_NEW_SOURCE)
 			self.pg_engine.add_source()
 			
 	def drop_source(self):
@@ -252,15 +254,15 @@ class replica_engine(msg_translate):
 			The method removes a replication source from the catalogue.
 		"""
 		if self.args.source == "*":
-			print("You must specify a source name with the argument --source")
+			print(self.FATAL_MISSING_SOURCE)
 		else:
-			drp_msg = 'Dropping the source %s will remove drop any replica reference.\n Are you sure? YES/No\n'  % self.args.source
+			drp_msg = self.INFO_DROP_SOURCE_CONFIRM.format(source=self.args.source)
 			drop_src = input(drp_msg)
 			if drop_src == 'YES':
-				self.logger.info("Trying to remove the source")
+				self.logger.info(self.INFO_DROP_SOURCE)
 				self.pg_engine.drop_source()
 			elif drop_src in  self.lst_yes:
-				print('Please type YES all uppercase to confirm')
+				print(self.WARN_UPPERCASE_CONFIRM)
 	
 	
 	def enable_replica(self):
