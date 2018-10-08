@@ -49,26 +49,40 @@ class rollbar_notifier(object):
 
 class config_lib(object):
 	def __init__(self, config):
-		self.config = config
+		self.config_name = config
 		cham_dir = "%s/.pg_chameleon" % os.path.expanduser('~')	
 		self.local_conf = "%s/configuration/" % cham_dir 
-		self.global_config = '%s/global-config.yml' % self.local_conf
+		self.global_file = '%s/global-config.yml' % self.local_conf
+		self.__load_globals()
 		self.load_config()
+	
+	def __load_globals(self):
+		"""
+			The method loads the global variables set in the global-config.yml.
+			This ensures the fundamental values are correctly set whether the configuration file is present or not.
+		"""
+		config_file = open(self.global_file, 'r')
+		self.global_config = yaml.load(config_file.read())
+		config_file.close()
+		self.config=dict(self.global_config.items())
+		
+		
 		
 	def load_config(self):
 		""" 
 			The method loads the configuration from the file specified in the args.config parameter.
 		"""
 		
-		self.config_file = '%s/%s.yml'%(self.local_conf, self.config)
+		self.config_file = '%s/%s.yml'%(self.local_conf, self.config_name)
 		
 		if not os.path.isfile(self.config_file):
 			print("**FATAL - configuration file missing. Please ensure the file %s is present." % (self.config_file))
 			sys.exit()
 		
 		config_file = open(self.config_file, 'r')
-		self.config = yaml.load(config_file.read())
+		config = yaml.load(config_file.read())
 		config_file.close()
+		self.config = dict(self.global_config, **config)
 		
 
 class logger_lib(object):

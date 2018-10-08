@@ -35,12 +35,12 @@ for path in listdir(locale_src_path):
 		locale_files.append('%s/%s' %(loc_path,loc_file))
 	data_files.append((locale_destination_path,locale_files))
 	
+config_files = ['configuration/config-example.yml', 'configuration/global-config.yml']
 
 
 
 
-
-conf_files = (conf_dir, ['configuration/config-example.yml'])
+conf_files = (conf_dir, config_files)
 
 sql_src = ['sql/create_schema.sql', 'sql/drop_schema.sql']
 sql_upgrade = ["%s/%s" % (sql_up_path, file) for file in listdir(sql_up_path) if isfile(join(sql_up_path, file))]
@@ -95,6 +95,7 @@ setup(
 		"pg_chameleon.lib.pg_lib",
 		"pg_chameleon.lib.sql_util", 
 		"pg_chameleon.msg.log_msg"
+		"pg_chameleon.msg.replica"
 	],
 	scripts=[
 		"scripts/chameleon.py", 
