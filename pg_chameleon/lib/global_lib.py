@@ -2,7 +2,6 @@ import rollbar
 import yaml
 import os, os.path
 import sys
-from distutils.sysconfig import get_python_lib
 import logging
 from logging.handlers  import TimedRotatingFileHandler
 
@@ -49,29 +48,19 @@ class rollbar_notifier(object):
 				self.logger.error("Wrong rollbar level specified.")
 
 class config_lib(object):
-	def __init__(self):
-		python_lib=get_python_lib()
+	def __init__(self, config):
+		self.config = config
 		cham_dir = "%s/.pg_chameleon" % os.path.expanduser('~')	
-		local_conf = "%s/configuration/" % cham_dir 
-		self.global_conf_example = '%s/pg_chameleon/configuration/config-example.yml' % python_lib
-		self.local_conf_example = '%s/config-example.yml' % local_conf
-		local_logs = "%s/logs/" % cham_dir 
-		local_pid = "%s/pid/" % cham_dir 
-		
-		self.conf_dirs=[
-			cham_dir, 
-			local_conf, 
-			local_logs, 
-			local_pid, 
-			
-		]
+		self.local_conf = "%s/configuration/" % cham_dir 
+		self.global_config = '%s/global-config.yml' % self.local_conf
 		self.load_config()
+		
 	def load_config(self):
 		""" 
 			The method loads the configuration from the file specified in the args.config parameter.
 		"""
-		local_confdir = "%s/.pg_chameleon/configuration/" % os.path.expanduser('~')	
-		self.config_file = '%s/%s.yml'%(local_confdir, self.args.config)
+		
+		self.config_file = '%s/%s.yml'%(self.local_conf, self.config)
 		
 		if not os.path.isfile(self.config_file):
 			print("**FATAL - configuration file missing. Please ensure the file %s is present." % (self.config_file))

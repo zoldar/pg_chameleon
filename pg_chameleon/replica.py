@@ -16,10 +16,11 @@ import multiprocessing as mp
 import traceback 
 from pg_chameleon.msg.log_msg import msg_translate
 from pg_chameleon.lib.global_lib import rollbar_notifier
+from pg_chameleon.lib.global_lib import config_lib
 
 
 
-class replica_engine(msg_translate):
+class replica_engine(msg_translate, config_lib):
 	"""
 		This class is wraps the the mysql and postgresql engines in order to perform the various activities required for the replica. 
 		The constructor inits the global configuration class  and setup the mysql and postgresql engines as class objects. 
@@ -38,8 +39,18 @@ class replica_engine(msg_translate):
 		
 			
 		local_conf = "%s/configuration/" % cham_dir 
-		self.global_conf_example = '%s/pg_chameleon/configuration/config-example.yml' % python_lib
-		self.local_conf_example = '%s/config-example.yml' % local_conf
+		self.configuration_files = {}
+		global_config = []
+		config_example = []
+		
+		config_example.append('%s/pg_chameleon/configuration/config-example.yml' % python_lib)
+		config_example.append('%s/config-example.yml' % local_conf)
+		
+		global_config.append('%s/pg_chameleon/configuration/global-config.yml' % python_lib)
+		global_config.append('%s/global-config.yml' % local_conf)
+		
+		self.configuration_files["config_example"] = config_example
+		self.configuration_files["global_config"] = global_config
 		
 		local_logs = "%s/logs/" % cham_dir 
 		local_pid = "%s/pid/" % cham_dir 
@@ -60,7 +71,7 @@ class replica_engine(msg_translate):
 		
 		self.__set_conf_permissions(cham_dir)
 		
-		self.load_config()
+		config_lib.__init__(self, self.args.config)
 		msg_translate.__init__(self, self.config["locale"])
 		#self.init_translate(self.config["locale"])
 		log_list = self.__init_logger("global")
@@ -157,7 +168,20 @@ class replica_engine(msg_translate):
 				print (self.INFO_CREATE_DIR .format(directory=confdir))
 				os.mkdir(confdir)
 		
-				
+		for conf in self.configuration_files:
+			source = self.configuration_files[conf][0]
+			destination = self.configuration_files[conf][1]
+			if os.path.isfile(destination):
+				if os.path.getctime(source)>os.path.getctime(destination):
+					print (self.INFO_UPDATE_CONF_FILE.format(file=destination))
+					copy(source, destination)
+			else:
+				print (self.INFO_COPY_CONF_FILE.format(file=destination))
+				copy(source, destination)
+
+					
+		
+		"""		
 		if os.path.isfile(self.local_conf_example):
 			if os.path.getctime(self.global_conf_example)>os.path.getctime(self.local_conf_example):
 				print (self.INFO_UPDATE_CONF_FILES.format(file=self.local_conf_example))
@@ -165,8 +189,8 @@ class replica_engine(msg_translate):
 		else:
 			print (self.INFO_COPY_EXAMPLE_CONF.format(file=self.local_conf_example))
 			copy(self.global_conf_example, self.local_conf_example)
-	
-	def load_config(self):
+		"""
+	def __load_config(self):
 		""" 
 			The method loads the configuration from the file specified in the args.config parameter.
 		"""

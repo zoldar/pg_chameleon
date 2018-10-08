@@ -1,0 +1,15 @@
+---
+# DO NOT EDIT
+# global configuration settings
+# you can override the listed variables 
+# using them into the replica's configuration file
+pid_dir: '~/.pg_chameleon/pid/'
+log_dir: '~/.pg_chameleon/logs/'
+log_dest: file
+log_level: info
+log_days_keep: 10
+rollbar_key: ''
+rollbar_env: ''
+locale:  "en_GB"
+
+
