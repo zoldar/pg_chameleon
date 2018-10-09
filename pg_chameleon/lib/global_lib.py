@@ -50,7 +50,7 @@ class rollbar_notifier(object):
 				self.logger.error("Wrong rollbar level specified.")
 
 class config_lib(object):
-	def __init__(self, config):
+	def __init__(self, config=None):
 		self.config_name = config
 		python_lib=get_python_lib()
 		cham_dir = "%s/.pg_chameleon" % os.path.expanduser('~')	
@@ -82,7 +82,8 @@ class config_lib(object):
 		]
 		try:
 			self.__load_globals()
-			self.load_config()
+			if config:
+				self.load_config()
 		except FileNotFoundError:
 			pass
 			

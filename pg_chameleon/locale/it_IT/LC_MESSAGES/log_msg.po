@@ -4,11 +4,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
-"POT-Creation-Date: 2018-10-07 17:37+0200\n"
-"PO-Revision-Date: 2018-10-07 17:45+0200\n"
+"Project-Id-Version: pg_chameleon\n"
+"POT-Creation-Date: 2018-10-09 12:05+0200\n"
+"PO-Revision-Date: 2018-10-09 12:05+0200\n"
 "Last-Translator: \n"
-"Language-Team: \n"
+"Language-Team: pg_chameleon <pgchameleon@gmail.com>\n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,8 +16,20 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 "X-Generator: Poedit 1.8.12\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: ../../../msg\n"
+"X-Poedit-SearchPath-0: .\n"
 
-#: log_msg.py:16
+#: log_msg.py:18
+msgid ""
+"Specifies the configuration to use without the suffix yml. If  the parameter "
+"is omitted then ~/.pg_chameleon/configuration/default.yml is used"
+msgstr ""
+"Specifica il file di configurazione da usare senza il suffisso yml. Se il "
+"parametro viene omesso allora verrà usato il file presente in ~/."
+"pg_chameleon/configuration/default.yml ."
+
+#: log_msg.py:31
 #, python-brace-format
 msgid ""
 "WARNING, entering upgrade mode. Disabling the catalogue version's check. "
@@ -26,7 +38,7 @@ msgstr ""
 "AVVISO, avvio modalitá upgrade. La verifica versione catalogo é "
 "disabilitata. Versione attesa {expected}, versione installata {installed}"
 
-#: log_msg.py:17
+#: log_msg.py:32
 #, python-brace-format
 msgid ""
 "WARNING, catalogue mismatch. Expected version {expected}, installed version "
@@ -35,7 +47,7 @@ msgstr ""
 "ATTENZIONE, versione catalogo incorretta. Versione attesa {expected}, "
 "versione installata {installed}"
 
-#: log_msg.py:18
+#: log_msg.py:33
 #, python-brace-format
 msgid ""
 "FATAL, replica catalogue version mismatch. Expected {expected}, got "
@@ -44,7 +56,7 @@ msgstr ""
 "ERRORE, versione catalogo incorretta. Versione attesa {expected}, versione "
 "installata {installed}"
 
-#: log_msg.py:19
+#: log_msg.py:34
 #, python-brace-format
 msgid ""
 "FATAL, the source {source} is not registered. Please add the source with the "
@@ -53,29 +65,27 @@ msgstr ""
 "ERRORE, la sorgente {source} non è registrata. Per aggiungerla usare il "
 "comando add_source --source {source}"
 
-#: log_msg.py:20
+#: log_msg.py:35
 msgid ""
 "Caught stop replica signal terminating daemons and ending the replica process"
 msgstr "Ricevuto segnale di stop. Arresto dei processi di replica"
 
-#: log_msg.py:21
+#: log_msg.py:36
 #, python-brace-format
 msgid "creating directory {directory}"
 msgstr "creazione directory {directory}"
 
-#: log_msg.py:22
+#: log_msg.py:37
 #, python-brace-format
-msgid "updating example configuration file with {file}"
-msgstr ""
-"il file di configurazione di esempio verrà aggiornato con il nuovo file "
-"{file}"
+msgid "updating {file}"
+msgstr "aggiornato {file}"
 
-#: log_msg.py:23
+#: log_msg.py:38
 #, python-brace-format
-msgid "copying  example configuration file in {file}"
-msgstr "il file di configurazione di esempio verrà copiato in {file}"
+msgid "copying {file}"
+msgstr "copiato {file}"
 
-#: log_msg.py:24
+#: log_msg.py:39
 #, python-brace-format
 msgid ""
 "FATAL, configuration file missing. Please ensure the file {file} is present."
@@ -83,15 +93,15 @@ msgstr ""
 "ERRORE, file di configurazione non trovato. Assicurarsi che il file {file} "
 "sia presente."
 
-#: log_msg.py:25
+#: log_msg.py:40
 msgid "Trying to create replica schema"
 msgstr "Creazione catalogo di replica"
 
-#: log_msg.py:26
+#: log_msg.py:41
 msgid "Dropping the replica schema"
 msgstr "Rimozione catalogo di replica"
 
-#: log_msg.py:27
+#: log_msg.py:42
 msgid ""
 "FATAL, no source name specified. You must specify a source name with the "
 "argument --source"
@@ -99,11 +109,11 @@ msgstr ""
 "ERRORE, non è stato specificato un nome sorgente. Per specificarlo usare "
 "l'argomento --source"
 
-#: log_msg.py:28
+#: log_msg.py:43
 msgid "Trying to add a new source"
 msgstr "Registrazione nuova sorgente"
 
-#: log_msg.py:29
+#: log_msg.py:44
 #, python-brace-format
 msgid ""
 "Dropping the source {source} will remove drop any replica reference.\n"
@@ -113,18 +123,26 @@ msgstr ""
 "relative alla replica ad essa associata.\n"
 " Sei sicuro? YES/No\n"
 
-#: log_msg.py:30
+#: log_msg.py:45
 msgid "Trying to remove the source"
 msgstr "Rimozione sorgente"
 
-#: log_msg.py:31
+#: log_msg.py:46
 msgid "Please type YES all uppercase to confirm"
 msgstr "Per confermare scrivere YES in maiuscolo"
 
-#: log_msg.py:34
+#: log_msg.py:49
 #, python-brace-format
 msgid "starting init replica for source {source}"
 msgstr "avviato processo di inizializzazione replica per la sorgente {source}"
+
+#~ msgid "updating example configuration file with {file}"
+#~ msgstr ""
+#~ "il file di configurazione di esempio verrà aggiornato con il nuovo file "
+#~ "{file}"
+
+#~ msgid "copying  example configuration file in {file}"
+#~ msgstr "il file di configurazione di esempio verrà copiato in {file}"
 
 #~ msgid ""
 #~ "Caught stop replica signal terminating daemons and ending the replica "

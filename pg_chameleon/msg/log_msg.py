@@ -1,8 +1,23 @@
 import gettext
 from distutils.sysconfig import get_python_lib
+from pg_chameleon.lib.global_lib import config_lib
 python_lib=get_python_lib()
 
 
+class chameleon_translate(object):
+	def __init__(self):
+		"""
+		Class constructor
+		"""
+		cnf=config_lib()
+		locale = cnf.config["locale"]
+		locale_dir = '%s/pg_chameleon/locale' % (python_lib, )
+		trn = gettext.translation('log_msg', localedir=locale_dir, languages=[locale])
+		#trn.install()
+		_ = trn.gettext
+		self.CONFIG_HELP = _("Specifies the configuration to use without the suffix yml. If  the parameter is omitted then ~/.pg_chameleon/configuration/default.yml is used")
+		
+		
 class msg_translate(object):
 	def __init__(self, locale):
 		"""
