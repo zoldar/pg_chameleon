@@ -10,19 +10,36 @@ class chameleon_translate(object):
 		Class constructor
 		"""
 		cnf=config_lib()
-		locale = cnf.config["locale"]
+		try:
+			locale = cnf.config["locale"]
+		except AttributeError:
+			locale = "en_GB"
 		locale_dir = '%s/pg_chameleon/locale' % (python_lib, )
 		trn = gettext.translation('log_msg', localedir=locale_dir, languages=[locale])
 		#trn.install()
 		_ = trn.gettext
-		self.CONFIG_HELP = _("Specifies the configuration to use without the suffix yml. If  the parameter is omitted then ~/.pg_chameleon/configuration/default.yml is used")
-		
+		self.PARSE_DESC = _("""Command line for pg_chameleon""")
+		self.CONFIG_HELP = _("""Specifies the configuration to use without the suffix yml. If  the parameter is omitted then ~/.pg_chameleon/configuration/default.yml is used.""")
+		self.SCHEMA_HELP = _("""Specifies the schema within a source. If omitted all schemas for the given source are affected by the command. Requires the argument --source to be specified.""")
+		self.SOURCE_HELP = _("""Specifies the source within a configuration. If omitted all sources are affected by the command.""")
+		self.TABLES_HELP = _("""Specifies the tables within a source . If omitted all tables are affected by the command.""")
+		self.LOGID_HELP = _("""Specifies the log id entry for displaying the error details""")
+		self.DEBUG_HELP = _("""Forces the debug mode with logging on stdout and log level debug""")
+		self.VERSION_HELP = _("""Displays pg_chameleon's installed  version""")
+		self.ROLLBAR_HELP = _("""Overrides the level for messages to be sent to rolllbar. One of: "critical", "error", "warning", "info". The Default is "info".""")
+		self.FULL_HELP = _("""When specified with run_maintenance the switch performs a vacuum full instead of a normal vacuum""")
+
 		
 class msg_translate(object):
-	def __init__(self, locale):
+	def __init__(self):
 		"""
 		Class constructor
 		"""
+		cnf=config_lib()
+		try:
+			locale = cnf.config["locale"]
+		except AttributeError:
+			locale = "en_GB"
 		locale_dir = '%s/pg_chameleon/locale' % (python_lib, )
 		trn = gettext.translation('log_msg', localedir=locale_dir, languages=[locale])
 		#trn.install()

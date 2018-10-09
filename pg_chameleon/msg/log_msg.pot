@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: pg_chameleon 2.1\n"
-"POT-Creation-Date: 2018-10-09 12:04+0200\n"
+"POT-Creation-Date: 2018-10-09 15:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: pg_chameleon <pgchameleon@gmail.com>\n"
@@ -19,86 +19,118 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: log_msg.py\n"
 
-#: log_msg.py:18
+#: log_msg.py:21
 msgid "Specifies the configuration to use without the suffix yml. If  the parameter is omitted then ~/.pg_chameleon/configuration/default.yml is used"
 msgstr ""
 
-#: log_msg.py:30
+#: log_msg.py:22
+msgid "Specifies the schema within a source. If omitted all schemas for the given source are affected by the command. Requires the argument --source to be specified"
+msgstr ""
+
+#: log_msg.py:23
+msgid "Specifies the source within a configuration. If omitted all sources are affected by the command."
+msgstr ""
+
+#: log_msg.py:24
+msgid "Specifies the tables within a source . If omitted all tables are affected by the command."
+msgstr ""
+
+#: log_msg.py:25
+msgid "Specifies the log id entry for displaying the error details"
+msgstr ""
+
+#: log_msg.py:26
+msgid "Forces the debug mode with logging on stdout and log level debug."
+msgstr ""
+
+#: log_msg.py:27
+msgid "Displays pg_chameleon's installed  version."
+msgstr ""
+
+#: log_msg.py:28
+msgid "Overrides the level for messages to be sent to rolllbar. One of: \"critical\", \"error\", \"warning\", \"info\". The Default is \"info\" "
+msgstr ""
+
+#: log_msg.py:29
+msgid "When specified with run_maintenance the switch performs a vacuum full instead of a normal vacuum. "
+msgstr ""
+
+#: log_msg.py:47
 #, python-brace-format
 msgid "WARNING, entering upgrade mode. Disabling the catalogue version's check. Expected version {expected}, installed version {installed}"
 msgstr ""
 
-#: log_msg.py:31
+#: log_msg.py:48
 #, python-brace-format
 msgid "WARNING, catalogue mismatch. Expected version {expected}, installed version {installed}"
 msgstr ""
 
-#: log_msg.py:32
+#: log_msg.py:49
 #, python-brace-format
 msgid "FATAL, replica catalogue version mismatch. Expected {expected}, got {installed}"
 msgstr ""
 
-#: log_msg.py:33
+#: log_msg.py:50
 #, python-brace-format
 msgid "FATAL, the source {source} is not registered. Please add the source with the command add_source --source {source}"
 msgstr ""
 
-#: log_msg.py:34
+#: log_msg.py:51
 msgid "Caught stop replica signal terminating daemons and ending the replica process"
 msgstr ""
 
-#: log_msg.py:35
+#: log_msg.py:52
 #, python-brace-format
 msgid "creating directory {directory}"
 msgstr ""
 
-#: log_msg.py:36
+#: log_msg.py:53
 #, python-brace-format
 msgid "updating {file}"
 msgstr ""
 
-#: log_msg.py:37
+#: log_msg.py:54
 #, python-brace-format
 msgid "copying {file}"
 msgstr ""
 
-#: log_msg.py:38
+#: log_msg.py:55
 #, python-brace-format
 msgid "FATAL, configuration file missing. Please ensure the file {file} is present."
 msgstr ""
 
-#: log_msg.py:39
+#: log_msg.py:56
 msgid "Trying to create replica schema"
 msgstr ""
 
-#: log_msg.py:40
+#: log_msg.py:57
 msgid "Dropping the replica schema"
 msgstr ""
 
-#: log_msg.py:41
+#: log_msg.py:58
 msgid "FATAL, no source name specified. You must specify a source name with the argument --source"
 msgstr ""
 
-#: log_msg.py:42
+#: log_msg.py:59
 msgid "Trying to add a new source"
 msgstr ""
 
-#: log_msg.py:43
+#: log_msg.py:60
 #, python-brace-format
 msgid ""
 "Dropping the source {source} will remove drop any replica reference.\n"
 " Are you sure? YES/No\n"
 msgstr ""
 
-#: log_msg.py:44
+#: log_msg.py:61
 msgid "Trying to remove the source"
 msgstr ""
 
-#: log_msg.py:45
+#: log_msg.py:62
 msgid "Please type YES all uppercase to confirm"
 msgstr ""
 
-#: log_msg.py:48
+#: log_msg.py:65
 #, python-brace-format
 msgid "starting init replica for source {source}"
 msgstr ""

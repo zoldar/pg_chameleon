@@ -39,16 +39,15 @@ class replica_engine(msg_translate, config_lib):
 		
 		
 		self.source = self.args.source
-		if self.args.command == 'set_configuration_files':
-			msg_translate.__init__(self, "en_GB")
+		if self.args.command == 'init_configuration':
+			msg_translate.__init__(self)
 			self.init_configuration()
 			sys.exit()
 		
 		self.__set_conf_permissions(cham_dir)
 		
 		
-		msg_translate.__init__(self, self.config["locale"])
-		#self.init_translate(self.config["locale"])
+		msg_translate.__init__(self)
 		log_list = self.__init_logger("global")
 		self.logger = log_list[0]
 		self.logger_fds = log_list[1]
@@ -68,7 +67,7 @@ class replica_engine(msg_translate, config_lib):
 		
 		
 		#mysql_source instance initialisation
-		self.mysql_source = mysql_source(self.config["locale"])
+		self.mysql_source = mysql_source()
 		self.mysql_source.source = self.args.source
 		self.mysql_source.tables = self.args.tables
 		self.mysql_source.schema = self.args.schema.strip()

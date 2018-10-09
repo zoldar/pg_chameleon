@@ -13,7 +13,7 @@ from os import remove
 
 
 class mysql_source(msg_translate):
-	def __init__(self, locale):
+	def __init__(self):
 		"""
 			Class constructor, the method sets the class variables and configure the
 			operating parameters from the args provided t the class.
@@ -27,7 +27,7 @@ class mysql_source(msg_translate):
 		self.schema_only = {}
 		self.gtid_mode = False
 		self.gtid_enable = False
-		msg_translate.__init__(self, locale)
+		msg_translate.__init__(self)
 		
 	def __del__(self):
 		"""

@@ -22,7 +22,7 @@ commands = [
 	'start_replica', 
 	'stop_replica', 
 	'detach_replica', 
-	'set_configuration_files', 
+	'init_configuration', 
 	'show_errors', 
 	'run_maintenance', 
 	'stop_all_replicas'
@@ -40,17 +40,17 @@ rollbar_help = """Overrides the level for messages to be sent to rolllbar. One o
 full_help = """When specified with run_maintenance the switch performs a vacuum full instead of a normal vacuum. """
 
 
-parser = argparse.ArgumentParser(description='Command line for pg_chameleon.',  add_help=True)
+parser = argparse.ArgumentParser(description=trn.PARSE_DESC,  add_help=True)
 parser.add_argument('command', type=str, help=command_help)
 parser.add_argument('--config', type=str,  default='default',  required=False, help=trn.CONFIG_HELP)
-parser.add_argument('--schema', type=str,  default='*',  required=False, help=schema_help)
-parser.add_argument('--source', type=str,  default='*',  required=False, help=source_help)
-parser.add_argument('--tables', type=str,  default='*',  required=False, help=tables_help)
-parser.add_argument('--logid', type=str,  default='*',  required=False, help=logid_help)
-parser.add_argument('--debug', default=False, required=False, help=debug_help, action='store_true')
-parser.add_argument('--version', action='version', help=version_help,version='{version}'.format(version=__version__))
-parser.add_argument('--rollbar-level', type=str, default="info", required=False, help=rollbar_help)
-parser.add_argument('--full', default=False, required=False, help=full_help, action='store_true')
+parser.add_argument('--schema', type=str,  default='*',  required=False, help=trn.SCHEMA_HELP)
+parser.add_argument('--source', type=str,  default='*',  required=False, help=trn.SOURCE_HELP)
+parser.add_argument('--tables', type=str,  default='*',  required=False, help=trn.TABLES_HELP)
+parser.add_argument('--logid', type=str,  default='*',  required=False, help=trn.LOGID_HELP)
+parser.add_argument('--debug', default=False, required=False, help=trn.DEBUG_HELP, action='store_true')
+parser.add_argument('--version', action='version', help=trn.VERSION_HELP,version='{version}'.format(version=__version__))
+parser.add_argument('--rollbar-level', type=str, default="info", required=False, help=trn.ROLLBAR_HELP)
+parser.add_argument('--full', default=False, required=False, help=trn.FULL_HELP, action='store_true')
 args = parser.parse_args()
 
 

@@ -108,23 +108,24 @@ class config_lib(object):
 			If the configuration file is missing the method copies the file with a different message.
 		
 		"""
-
+		path_created = False
 		for confdir in self.conf_dirs:
 			if not os.path.isdir(confdir):
 				print (self.INFO_CREATE_DIR .format(directory=confdir))
 				os.mkdir(confdir)
-		
-		for conf in self.configuration_files:
-			source = self.configuration_files[conf][0]
-			destination = self.configuration_files[conf][1]
-			if os.path.isfile(destination):
-				if os.path.getctime(source)>os.path.getctime(destination):
-					print (self.INFO_UPDATE_CONF_FILE.format(file=destination))
+				path_created = True
+		if path_created :
+			for conf in self.configuration_files:
+				source = self.configuration_files[conf][0]
+				destination = self.configuration_files[conf][1]
+				if os.path.isfile(destination):
+					if os.path.getctime(source)>os.path.getctime(destination):
+						print (self.INFO_UPDATE_CONF_FILE.format(file=destination))
+						copy(source, destination)
+				else:
+					print (self.INFO_COPY_CONF_FILE.format(file=destination))
 					copy(source, destination)
-			else:
-				print (self.INFO_COPY_CONF_FILE.format(file=destination))
-				copy(source, destination)
-	
+		
 		
 	def load_config(self):
 		""" 
