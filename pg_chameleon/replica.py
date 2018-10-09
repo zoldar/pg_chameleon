@@ -5,7 +5,6 @@ import sys
 import time
 import signal
 from shutil import copy
-from distutils.sysconfig import get_python_lib
 from tabulate import tabulate
 from pg_chameleon.lib.pg_lib import pg_engine, pgsql_source
 from pg_chameleon.lib.mysql_lib import mysql_source
@@ -31,47 +30,23 @@ class replica_engine(msg_translate, config_lib):
 		"""
 			Class constructor.
 		"""
+		self.args = args
 		self.catalog_version = '2.0.6'
 		self.upgradable_version = '1.7'
 		self.lst_yes= ['yes',  'Yes', 'y', 'Y']
-		python_lib=get_python_lib()
+		config_lib.__init__(self, self.args.config)
 		cham_dir = "%s/.pg_chameleon" % os.path.expanduser('~')	
 		
-			
-		local_conf = "%s/configuration/" % cham_dir 
-		self.configuration_files = {}
-		global_config = []
-		config_example = []
 		
-		config_example.append('%s/pg_chameleon/configuration/config-example.yml' % python_lib)
-		config_example.append('%s/config-example.yml' % local_conf)
-		
-		global_config.append('%s/pg_chameleon/configuration/global-config.yml' % python_lib)
-		global_config.append('%s/global-config.yml' % local_conf)
-		
-		self.configuration_files["config_example"] = config_example
-		self.configuration_files["global_config"] = global_config
-		
-		local_logs = "%s/logs/" % cham_dir 
-		local_pid = "%s/pid/" % cham_dir 
-		
-		self.conf_dirs=[
-			cham_dir, 
-			local_conf, 
-			local_logs, 
-			local_pid, 
-			
-		]
-		self.args = args
 		self.source = self.args.source
 		if self.args.command == 'set_configuration_files':
 			msg_translate.__init__(self, "en_GB")
-			self.set_configuration_files()
+			self.init_configuration()
 			sys.exit()
 		
 		self.__set_conf_permissions(cham_dir)
 		
-		config_lib.__init__(self, self.args.config)
+		
 		msg_translate.__init__(self, self.config["locale"])
 		#self.init_translate(self.config["locale"])
 		log_list = self.__init_logger("global")
@@ -151,60 +126,6 @@ class replica_engine(msg_translate, config_lib):
 		self.pg_engine.connect_db()
 		self.pg_engine.set_source_status("stopped")
 		sys.exit(0)
-		
-	def set_configuration_files(self):
-		""" 
-			The method loops the list self.conf_dirs creating them only if they are missing.
-			
-			The method checks the freshness of the config-example.yaml and connection-example.yml 
-			copies the new version from the python library determined in the class constructor with get_python_lib().
-			
-			If the configuration file is missing the method copies the file with a different message.
-		
-		"""
-
-		for confdir in self.conf_dirs:
-			if not os.path.isdir(confdir):
-				print (self.INFO_CREATE_DIR .format(directory=confdir))
-				os.mkdir(confdir)
-		
-		for conf in self.configuration_files:
-			source = self.configuration_files[conf][0]
-			destination = self.configuration_files[conf][1]
-			if os.path.isfile(destination):
-				if os.path.getctime(source)>os.path.getctime(destination):
-					print (self.INFO_UPDATE_CONF_FILE.format(file=destination))
-					copy(source, destination)
-			else:
-				print (self.INFO_COPY_CONF_FILE.format(file=destination))
-				copy(source, destination)
-
-					
-		
-		"""		
-		if os.path.isfile(self.local_conf_example):
-			if os.path.getctime(self.global_conf_example)>os.path.getctime(self.local_conf_example):
-				print (self.INFO_UPDATE_CONF_FILES.format(file=self.local_conf_example))
-				copy(self.global_conf_example, self.local_conf_example)
-		else:
-			print (self.INFO_COPY_EXAMPLE_CONF.format(file=self.local_conf_example))
-			copy(self.global_conf_example, self.local_conf_example)
-		"""
-	def __load_config(self):
-		""" 
-			The method loads the configuration from the file specified in the args.config parameter.
-		"""
-		local_confdir = "%s/.pg_chameleon/configuration/" % os.path.expanduser('~')	
-		self.config_file = '%s/%s.yml'%(local_confdir, self.args.config)
-		
-		if not os.path.isfile(self.config_file):
-			msg_translate.__init__(self, "en_GB")
-			print(self.FATAL_MISSING_CONF_FILE.format(file=self.config_file))
-			sys.exit()
-		
-		config_file = open(self.config_file, 'r')
-		self.config = yaml.load(config_file.read())
-		config_file.close()
 		
 		
 	

@@ -4,6 +4,8 @@ import os, os.path
 import sys
 import logging
 from logging.handlers  import TimedRotatingFileHandler
+from distutils.sysconfig import get_python_lib
+from shutil import copy
 
 class rollbar_notifier(object):
 	"""
@@ -50,11 +52,40 @@ class rollbar_notifier(object):
 class config_lib(object):
 	def __init__(self, config):
 		self.config_name = config
+		python_lib=get_python_lib()
 		cham_dir = "%s/.pg_chameleon" % os.path.expanduser('~')	
 		self.local_conf = "%s/configuration/" % cham_dir 
 		self.global_file = '%s/global-config.yml' % self.local_conf
-		self.__load_globals()
-		self.load_config()
+		
+		self.configuration_files = {}
+		global_config = []
+		config_example = []
+		
+		config_example.append('%s/pg_chameleon/configuration/config-example.yml' % python_lib)
+		config_example.append('%s/config-example.yml' % self.local_conf)
+		
+		global_config.append('%s/pg_chameleon/configuration/global-config.yml' % python_lib)
+		global_config.append('%s/global-config.yml' % self.local_conf)
+		
+		self.configuration_files["config_example"] = config_example
+		self.configuration_files["global_config"] = global_config
+		
+		local_logs = "%s/logs/" % cham_dir 
+		local_pid = "%s/pid/" % cham_dir 
+		
+		self.conf_dirs=[
+			cham_dir, 
+			self.local_conf, 
+			local_logs, 
+			local_pid, 
+			
+		]
+		try:
+			self.__load_globals()
+			self.load_config()
+		except FileNotFoundError:
+			pass
+			
 	
 	def __load_globals(self):
 		"""
@@ -66,7 +97,33 @@ class config_lib(object):
 		config_file.close()
 		self.config=dict(self.global_config.items())
 		
+	def init_configuration(self):
+		""" 
+			The method loops the list self.conf_dirs creating them only if they are missing.
+			
+			The method checks the freshness of the config-example.yaml and connection-example.yml 
+			copies the new version from the python library determined in the class constructor with get_python_lib().
+			
+			If the configuration file is missing the method copies the file with a different message.
 		
+		"""
+
+		for confdir in self.conf_dirs:
+			if not os.path.isdir(confdir):
+				print (self.INFO_CREATE_DIR .format(directory=confdir))
+				os.mkdir(confdir)
+		
+		for conf in self.configuration_files:
+			source = self.configuration_files[conf][0]
+			destination = self.configuration_files[conf][1]
+			if os.path.isfile(destination):
+				if os.path.getctime(source)>os.path.getctime(destination):
+					print (self.INFO_UPDATE_CONF_FILE.format(file=destination))
+					copy(source, destination)
+			else:
+				print (self.INFO_COPY_CONF_FILE.format(file=destination))
+				copy(source, destination)
+	
 		
 	def load_config(self):
 		""" 
