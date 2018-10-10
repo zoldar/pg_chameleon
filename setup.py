@@ -94,8 +94,8 @@ setup(
 		"pg_chameleon.lib.mysql_lib",
 		"pg_chameleon.lib.pg_lib",
 		"pg_chameleon.lib.sql_util", 
-		"pg_chameleon.msg.log_msg"
-		"pg_chameleon.msg.replica"
+		"pg_chameleon.msg.log_msg", 
+		"pg_chameleon.replica"
 	],
 	scripts=[
 		"scripts/chameleon.py", 
