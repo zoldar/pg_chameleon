@@ -23,6 +23,7 @@ commands = [
 	'stop_replica', 
 	'detach_replica', 
 	'init_configuration', 
+	'update_configuration', 
 	'show_errors', 
 	'run_maintenance', 
 	'stop_all_replicas'
