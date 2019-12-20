@@ -6,7 +6,6 @@ import sys
 import time
 import signal
 from shutil import copy
-from distutils.sysconfig import get_python_lib
 from tabulate import tabulate
 from pg_chameleon import pg_engine, mysql_source, pgsql_source
 import logging

@@ -18,12 +18,12 @@ setup(
 	maintainer = "Federico Campoli", 
 	maintainer_email = "the4thdoctor.gallifrey@gmail.com",
 	url="https://github.com/the4thdoctor/pg_chameleon/",
-	license="BSD License",
+	license="PostgreSQL License",
 	platforms=[
 		"linux"
 	],
 	classifiers=[
-		"License :: OSI Approved :: BSD License",
+		"License :: OSI Approved :: PostgreSQL License",
 		"Environment :: Console",
 		"Intended Audience :: Developers",
 		"Intended Audience :: Information Technology",
