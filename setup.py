@@ -52,8 +52,8 @@ setup(
 	install_requires=[
 		'PyMySQL>=0.7.11', 
 		'argparse>=1.2.1', 
-		'mysql-replication>=0.15', 
-		'psycopg2-binary>=2.8.3', 
+		'mysql-replication>=0.21', 
+		'psycopg2>=2.8.4 ', 
 		'PyYAML>=5.1.2', 
 		'tabulate>=0.8.1', 
 		'daemonize>=2.4.7', 
