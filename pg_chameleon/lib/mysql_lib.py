@@ -677,7 +677,7 @@ class mysql_source(object):
 		"""
 		self.cursor_buffered.execute(sql_index, (schema, table))
 		index_data = self.cursor_buffered.fetchall()
-		table_pkey = self.pg_engine.create_indices(loading_schema, table, index_data)
+		table_pkey = self.pg_engine.create_indices(loading_schema, table, index_data, self.source_config)
 		self.disconnect_db_buffered()
 		return table_pkey
 		

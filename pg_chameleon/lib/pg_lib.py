@@ -3531,7 +3531,7 @@ class pg_engine(object):
 				self.logger.error("unexpected error when processing the row")
 				self.logger.error(" - > Table: %s.%s" % (schema, table))
 	
-	def create_indices(self, schema, table, index_data):
+	def create_indices(self, schema, table, index_data, config):
 		"""
 			The method loops odver the list index_data and creates the indices on the table 
 			specified with schema and table parameters.
@@ -3543,6 +3543,7 @@ class pg_engine(object):
 			:return: a list with the eventual column(s) used as primary key
 			:rtype: list
 		"""
+		ecto_index_pk_naming_style = config["ecto_index_pk_naming_style"]
 		idx_ddl = {}
 		table_primary = []
 		for index in index_data:
@@ -3551,9 +3552,14 @@ class pg_engine(object):
 				self.logger.debug("Building DDL for index %s" % (indx))
 				idx_col = [column.strip() for column in index["index_columns"].split(',')]
 				index_columns = ['"%s"' % column.strip() for column in idx_col]
+				unquoted_index_columns = ['%s' % column.strip() for column in idx_col]
 				non_unique = index["non_unique"]
 				if indx =='PRIMARY':
-					pkey_name = "pk_%s_%s_%s " % (table[0:10],table_timestamp,  self.idx_sequence)
+					pkey_name = None
+					if ecto_index_pk_naming_style:
+						pkey_name = "%s_pkey" % (table,)
+					else:
+						pkey_name = "pk_%s_%s_%s " % (table[0:10],table_timestamp,  self.idx_sequence)
 					pkey_def = 'ALTER TABLE "%s"."%s" ADD CONSTRAINT "%s" PRIMARY KEY (%s) ;' % (schema, table, pkey_name, ','.join(index_columns))
 					idx_ddl[pkey_name] = pkey_def
 					table_primary = idx_col
@@ -3564,7 +3570,11 @@ class pg_engine(object):
 							table_primary = idx_col
 					else:
 						unique_key = ''
-					index_name='idx_%s_%s_%s_%s' % (indx[0:10], table[0:10], table_timestamp, self.idx_sequence)
+					index_name = None
+					if ecto_index_pk_naming_style:
+						index_name= '_'.join([table] + unquoted_index_columns + ['index'])
+					else:
+						index_name='idx_%s_%s_%s_%s' % (indx[0:10], table[0:10], table_timestamp, self.idx_sequence)
 					idx_def='CREATE %s INDEX "%s" ON "%s"."%s" (%s);' % (unique_key, index_name, schema, table, ','.join(index_columns) )
 					idx_ddl[index_name] = idx_def
 				self.idx_sequence+=1
