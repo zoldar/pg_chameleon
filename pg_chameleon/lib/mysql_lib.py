@@ -702,6 +702,18 @@ class mysql_source(object):
 				except:
 					self.logger.info("Could not copy the table %s. Excluding it from the replica." %(table) )
 					raise
+
+	def __setup_tables_for_sync(self, master_status):
+		for schema in self.schema_tables:
+			destination_schema = 'public'
+			table_list = self.schema_tables[schema]
+			for table in table_list:
+				table_pkey = None
+				try:
+					table_pkey = self.source_config["primary_key_mappings"][table]
+				except KeyError:
+					table_pkey = ["id"]
+				self.pg_engine.store_table(destination_schema, table, table_pkey, master_status)
 	
 	def set_copy_max_memory(self):
 		"""
@@ -1372,18 +1384,22 @@ class mysql_source(object):
 		self.schema_list = [schema for schema in self.schema_mappings]
 		self.__build_table_exceptions()
 		self.get_table_list()
-		self.create_destination_schemas()
+		# self.create_destination_schemas()
 		try:
 			self.pg_engine.insert_source_timings()
 			self.pg_engine.schema_loading = self.schema_loading
-			self.create_destination_tables()
+			# self.create_destination_tables()
 			self.disconnect_db_buffered()
-			self.__copy_tables()
-			self.pg_engine.grant_select()
-			self.pg_engine.swap_schemas()
+			self.__setup_tables_for_sync(master_start)
+			# self.__copy_tables()
+			# self.pg_engine.grant_select()
+			# self.pg_engine.swap_schemas()
 			self.pg_engine.clean_batch_data()
-			self.pg_engine.save_master_status(master_start)
-			self.drop_loading_schemas()
+			self.connect_db_buffered()
+			master_middle = self.get_master_coordinates()
+			self.disconnect_db_buffered()
+			self.pg_engine.save_master_status(master_middle)
+			# self.drop_loading_schemas()
 			self.pg_engine.set_source_status("initialised")
 			self.connect_db_buffered()
 			master_end = self.get_master_coordinates()
@@ -1394,7 +1410,7 @@ class mysql_source(object):
 			self.logger.info(notifier_message)
 			
 		except:
-			self.drop_loading_schemas()
+			# self.drop_loading_schemas()
 			self.pg_engine.set_source_status("error")
 			notifier_message = "init replica for source %s failed" % self.source
 			self.logger.critical(notifier_message)
