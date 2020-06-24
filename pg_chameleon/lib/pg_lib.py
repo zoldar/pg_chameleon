@@ -1873,7 +1873,7 @@ class pg_engine(object):
 		list_conditions = []
 		for schema in self.schema_tables:
 			for table_name in self.schema_tables[schema]:
-				table_schema = self.schema_loading[schema]["destination"]
+				table_schema = 'public'
 				where_cond = "format('%%I.%%I','%s','%s')" % (table_schema, table_name)
 				list_conditions.append(where_cond)
 		sql_cleanup = "DELETE FROM sch_chameleon.{} WHERE format('%%I.%%I',v_schema_name,v_table_name) IN (%s) ;" % ' ,'.join(list_conditions)
