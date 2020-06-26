@@ -713,17 +713,7 @@ class mysql_source(object):
 					table_pkey = self.source_config["primary_key_mappings"][table]
 				except KeyError:
 					table_pkey = ["id"]
-				try:
-					custom_position = self.source_config["custom_cursor_positions"][table]
-					master_status = self.__adjust_cursor_position(master_status, custom_position)
-				except KeyError:
-					continue
 				self.pg_engine.store_table(destination_schema, table, table_pkey, master_status)
-
-	def __adjust_cursor_position(self, master_status, custom_position):
-		master_status[0]["Position"] = custom_position
-
-		return master_status
 	
 	def set_copy_max_memory(self):
 		"""
@@ -877,19 +867,16 @@ class mysql_source(object):
 		self.__build_table_exceptions()
 		self.schema_list = [schema for schema in self.schema_mappings if schema in self.schema_only]
 		self.get_table_list()
-		# self.create_destination_schemas()
-		self.logger.debug(self.schema_tables)
+		self.create_destination_schemas()
 		self.pg_engine.schema_loading = self.schema_loading
 		self.pg_engine.schema_tables = self.schema_tables
-		# self.create_destination_tables()
-		master_middle = self.get_master_coordinates()
+		self.create_destination_tables()
 		self.disconnect_db_buffered()
-		self.__setup_tables_for_sync(master_middle)
-		# self.__copy_tables()
-		# self.pg_engine.grant_select()
+		self.__copy_tables()
+		self.pg_engine.grant_select()
 		try:
-			# self.pg_engine.swap_tables()
-			# self.drop_loading_schemas()
+			self.pg_engine.swap_tables()
+			self.drop_loading_schemas()
 			self.pg_engine.set_source_status("synced")
 			self.connect_db_buffered()
 			master_end = self.get_master_coordinates()
@@ -900,7 +887,7 @@ class mysql_source(object):
 			self.notifier.send_message(notifier_message, 'info')
 			self.logger.info(notifier_message)
 		except:
-			# self.drop_loading_schemas()
+			self.drop_loading_schemas()
 			self.pg_engine.set_source_status("error")
 			notifier_message = "the sync for tables %s in source %s failed" % (self.tables, self.source)
 			self.notifier.send_message(notifier_message, 'critical')
