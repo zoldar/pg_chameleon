@@ -721,8 +721,7 @@ class mysql_source(object):
 				self.pg_engine.store_table(destination_schema, table, table_pkey, master_status)
 
 	def __adjust_cursor_position(self, master_status, custom_position):
-		master_status[0]["Position"] = custom_position['position']
-		master_status[0]["File"] = custom_position['file']
+		master_status[0]["Position"] = custom_position
 
 		return master_status
 	
