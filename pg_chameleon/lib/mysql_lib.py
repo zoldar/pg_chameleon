@@ -1204,8 +1204,7 @@ class mysql_source(object):
 						
 					sql_tokeniser.reset_lists()
 				if close_batch:
-					my_stream.close()
-					return [master_data, close_batch]
+					break
 			else:
 				
 				for row in binlogevent.rows:
